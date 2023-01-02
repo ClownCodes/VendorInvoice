@@ -1,0 +1,107 @@
+﻿@model AddEditVendorViewModel
+
+<div class="text-danger" asp-validation-summary="ModelOnly"></div>
+<div class="form-group row mb-2">
+    <div class="col-sm-2"><label>Name:</label></div>
+    <div class="col-sm-4">
+        <input type="text" asp-for="@Model.Vendor.Name" class="form-control" />
+    </div>
+    <div class="col-sm-6">
+        <span asp-validation-for="@Model.Vendor.Name" class="text-danger"></span>
+    </div>
+</div>
+
+<div class="form-group row mb-2">
+    <div class="col-sm-2"><label>Address 1:</label></div>
+    <div class="col-sm-4">
+        <input type="text" asp-for="@Model.Vendor.Address1" class="form-control" />
+    </div>
+    <div class="col-sm-6">
+        <span asp-validation-for="@Model.Vendor.Address1" class="text-danger"></span>
+    </div>
+</div>
+
+<div class="form-group row mb-2">
+    <div class="col-sm-2"><label>Address 2:</label></div>
+    <div class="col-sm-4">
+        <input type="text" asp-for="@Model.Vendor.Address2" class="form-control" />
+    </div>
+    <div class="col-sm-6">
+        <span asp-validation-for="@Model.Vendor.Address2" class="text-danger"></span>
+    </div>
+</div>
+
+<div class="form-group row mb-2">
+    <div class="col-sm-2"><label>City:</label></div>
+    <div class="col-sm-4">
+        <input type="text" asp-for="@Model.Vendor.City" class="form-control" />
+    </div>
+    <div class="col-sm-6">
+        <span asp-validation-for="@Model.Vendor.City" class="text-danger"></span>
+    </div>
+</div>
+
+<div class="form-group row mb-2">
+    <div class="col-sm-2"><label>Province/State:</label></div>
+    <div class="col-sm-4">
+        <input type="text" asp-for="@Model.Vendor.ProvinceOrState" class="form-control" />
+    </div>
+    <div class="col-sm-6">
+        <span asp-validation-for="@Model.Vendor.ProvinceOrState" class="text-danger"></span>
+    </div>
+</div>
+
+<div class="form-group row mb-2">
+    <div class="col-sm-2"><label>Zip/PostalCode:</label></div>
+    <div class="col-sm-4">
+        <input type="text" asp-for="@Model.Vendor.ZipOrPostalCode" class="form-control" />
+    </div>
+    <div class="col-sm-6">
+        <span asp-validation-for="@Model.Vendor.ZipOrPostalCode" class="text-danger"></span>
+    </div>
+</div>
+
+<div class="form-group row mb-2">
+    <div class="col-sm-2"><label>Phone:</label></div>
+    <div class="col-sm-4">
+        <input type="text" asp-for="@Model.Vendor.VendorPhone" class="form-control" />
+    </div>
+    <div class="col-sm-6">
+        <span asp-validation-for="@Model.Vendor.VendorPhone" class="text-danger"></span>
+    </div>
+</div>
+
+<div class="form-group row mb-2">
+    <div class="col-sm-2"><label>Contact First Name:</label></div>
+    <div class="col-sm-4">
+        <input type="text" asp-for="@Model.Vendor.VendorContactFirstName" class="form-control" />
+    </div>
+    <div class="col-sm-6">
+        <span asp-validation-for="@Model.Vendor.VendorContactFirstName" class="text-danger"></span>
+    </div>
+</div>
+
+<div class="form-group row mb-2">
+    <div class="col-sm-2"><label>Contact Last Name:</label></div>
+    <div class="col-sm-4">
+        <input type="text" asp-for="@Model.Vendor.VendorContactLastName" class="form-control" />
+    </div>
+    <div class="col-sm-6">
+        <span asp-validation-for="@Model.Vendor.VendorContactLastName" class="text-danger"></span>
+    </div>
+</div>
+
+<div class="form-group row mb-3">
+    <div class="col-sm-2"><label>Contact Email Address:</label></div>
+    <div class="col-sm-4">
+        <input type="text" asp-for="@Model.Vendor.VendorContactEmail" class="form-control" />
+    </div>
+    <div class="col-sm-6">
+        <span asp-validation-for="@Model.Vendor.VendorContactEmail" class="text-danger"></span>
+    </div>
+</div>
+
+<input type="hidden" asp-for="LowerBound" />
+<input type="hidden" asp-for="UpperBound" />
+
+<a asp-controller="VendorInvoice" asp-action="GetAllVendorsAlphabetically" asp-route-lowerBound="@Model.LowerBound" asp-route-upperBound="@Model.UpperBound" class="btn btn-primary">Cancel</a>

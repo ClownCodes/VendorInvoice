@@ -1,0 +1,76 @@
+﻿@model List<Vendor>
+
+@{
+    ViewData["Title"] = "All Vendors Grouped";
+
+    string btnAeStyle = "btn-light";
+    string btnFkStyle = "btn-light";
+    string btnLrStyle = "btn-light";
+    string btnSzStyle = "btn-light";
+    switch (ViewData["GroupSelected"])
+    {
+        case "ae":
+            btnAeStyle = "btn-primary";
+            break;
+        case "fk":
+            btnFkStyle = "btn-primary";
+            break;
+        case "lr":
+            btnLrStyle = "btn-primary";
+            break;
+        case "sz":
+            btnSzStyle = "btn-primary";
+            break;
+    }
+}
+
+@{
+    if (ViewContext.TempData.ContainsKey("LastActionMessage"))
+    {
+
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <span>
+                @TempData["LastActionMessage"]
+                <a asp-controller="VendorInvoice" asp-action="ProcessUndoDeleteRequestById" asp-route-lowerBound="@ViewData["GroupSelected"].ToString()[0]" asp-route-upperBound="@ViewData["GroupSelected"].ToString()[1]" asp-route-id="@Context.Session.GetString("LastDeletedVendorId")">Undo</a>
+                this delete.            
+            </span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+}
+
+<a asp-controller="VendorInvoice" asp-action="GetAddVendorRequest" asp-route-lowerBound="@ViewData["GroupSelected"].ToString()[0]" asp-route-upperBound="@ViewData["GroupSelected"].ToString()[1]">Add a vendor</a>
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Address</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var vendor in Model)
+        {
+            if (vendor.IsDeleted == false)
+            {
+                <tr>
+                    <td>@vendor.Name</td>
+                    <td>@vendor.Address1 @vendor.Address2, @vendor.City, @vendor.ProvinceOrState</td>
+                    <td>
+                        <a asp-controller="VendorInvoice" asp-action="GetInvoicsByVendorId" asp-route-vendorId="@vendor.VendorId" asp-route-lowerBound="@ViewData["GroupSelected"].ToString()[0]" asp-route-upperBound="@ViewData["GroupSelected"].ToString()[1]" asp-route-invoiceId="-1">Invoices</a>
+                        <span class="mix">|</span>
+                        <a asp-controller="VendorInvoice" asp-action="GetVendorById" asp-route-id="@vendor.VendorId" asp-route-lowerBound="@ViewData["GroupSelected"].ToString()[0]" asp-route-upperBound="@ViewData["GroupSelected"].ToString()[1]">Edit</a>
+                        <span class="mix">|</span>
+                        <a asp-controller="VendorInvoice" asp-action="ProcessDeleteRequestById" asp-route-lowerBound="@ViewData["GroupSelected"].ToString()[0]" asp-route-upperBound="@ViewData["GroupSelected"].ToString()[1]" asp-route-id="@vendor.VendorId">Delete</a>
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+
+<a asp-controller="VendorInvoice" asp-action="GetAllVendorsAlphabetically" asp-route-lowerBound="a" asp-route-upperBound="e" class="btn @btnAeStyle">A-E</a>
+<a asp-controller="VendorInvoice" asp-action="GetAllVendorsAlphabetically" asp-route-lowerBound="f" asp-route-upperBound="k" class="btn @btnFkStyle">F-K</a>
+<a asp-controller="VendorInvoice" asp-action="GetAllVendorsAlphabetically" asp-route-lowerBound="l" asp-route-upperBound="r" class="btn @btnLrStyle">L-R</a>
+<a asp-controller="VendorInvoice" asp-action="GetAllVendorsAlphabetically" asp-route-lowerBound="s" asp-route-upperBound="z" class="btn @btnSzStyle">S-Z</a>

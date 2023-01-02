@@ -1,0 +1,126 @@
+﻿@model InvoicesViewModel
+
+@{
+    ViewData["Title"] = "Invoices for " + Model.ActiveVendor.Name;
+
+    string invoiceRowStyle = "";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm">
+            <h6 style="color:gray">Address: @Model.ActiveVendor.Address1 @Model.ActiveVendor.City</h6>
+            <h6>Invoices</h6>
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>Invoice #</th>
+                        <th>Due Date</th>
+                        <th>Amount Paid</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var invoice in Model.Invoices)
+                    {
+                        if (Model.ActiveInvoice.InvoiceId == invoice.InvoiceId)
+                        {
+                            invoiceRowStyle = "table-primary";
+                        }
+                        <tr class=@invoiceRowStyle>
+                            <td><a asp-asp-controller="VendorInvoice" asp-action="GetInvoicsByVendorId" asp-route-invoiceId="@invoice.InvoiceId">@invoice.InvoiceId</a></td>
+                            <td>@invoice.InvoiceDueDate?.ToString("d")</td>
+                            <td>@invoice.PaymentTotal?.ToString("c")</td>
+                        </tr>
+                        invoiceRowStyle = "";
+                    }
+                </tbody>
+            </table>
+
+            <form asp-controller="VendorInvoice" asp-action="AddInvoiceToVendorById" asp-route-vendorId="@Model.ActiveVendor.VendorId" asp-route-lowerBound="@Model.LowerBound" asp-route-upperBound="@Model.UpperBound" method="post" enctype="application/x-www-form-urlencoded">
+                <div class="form-group">
+                    <label asp-for="NewInvoice.InvoiceDate">Date:</label>
+                    <input type="datetime" asp-for="NewInvoice.InvoiceDate" value="@DateTime.Today.ToShortDateString()" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label asp-for="NewInvoice.PaymentTermsId">Terms:</label>
+                    <select asp-for="NewInvoice.PaymentTermsId" class="form-control">
+                        @foreach (var paymentTerms in Model.PaymentTerms)
+                        {
+                            <option value="@paymentTerms.PaymentTermsId">@paymentTerms.Description</option>
+                        }
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary mt-3">Add Invoice</button>
+            </form>
+        </div>
+
+
+        <div class="col-sm mt-n4">
+            <a asp-controller="VendorInvoice" asp-action="GetAllVendorsAlphabetically" asp-route-lowerBound="@Model.LowerBound" asp-route-upperBound="@Model.UpperBound">Return to @Model.LowerBound.ToString().ToUpper()-@Model.UpperBound.ToString().ToUpper() vendors</a>
+            <h6 style="color:gray">
+                @{
+                    string terms = "No due";
+                    if (Model.ActiveInvoice != null)
+                    {
+                        terms = Model.ActiveInvoice.PaymentTerms.DueDays.ToString();
+                    }
+                }
+                Terms: @terms Days
+            </h6>
+            <h6>
+                @{
+                    string invoiceId = "No line items";
+                    if (Model.ActiveInvoice != null)
+                    {
+                        invoiceId = $"Line items for invoice #{Model.ActiveInvoice.InvoiceId}";
+                    }
+                }
+                @invoiceId
+            </h6>
+
+            @{
+                if (Model.ActiveInvoice != null)
+                {
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>Description</th>
+                                <th>Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var lineItem in Model.LineItems)
+                            {
+                                <tr>
+                                    <td>@lineItem.Description</td>
+                                    <td>@lineItem.Amount?.ToString("c")</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    double? total = 0;
+                    foreach (var lineItem in Model.LineItems)
+                    {
+                        if (lineItem.Amount != null)
+                        {
+                            total += lineItem.Amount;
+                        }
+                    }
+                    <h6>Total: @total?.ToString("c")</h6>
+
+                    <form asp-controller="VendorInvoice" asp-action="AddInvoiceLineItemsByInvoiceId" asp-route-id="@Model.ActiveInvoice.InvoiceId" asp-route-lowerBound="@Model.LowerBound" asp-route-upperBound="@Model.UpperBound" method="post" enctype="application/x-www-form-urlencoded">
+                        <div class="form-group">
+                            <label asp-for="NewLineItem.Description">Descripiton:</label>
+                            <input type="text" asp-for="NewLineItem.Description" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="NewLineItem.Amount">Amount:</label>
+                            <input type="text" asp-for="NewLineItem.Amount" class="form-control" />
+                        </div>
+                        <button type="submit" class="btn btn-primary mt-3">Add Line Item</button>
+                    </form>
+                }
+            }
+        </div>
+    </div>
+</div>

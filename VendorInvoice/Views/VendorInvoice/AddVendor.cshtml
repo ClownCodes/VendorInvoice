@@ -1,0 +1,14 @@
+﻿@model AddEditVendorViewModel
+
+@{
+    ViewData["Title"] = "Add a new vendor";
+}
+
+<form asp-controller="VendorInvoice" asp-action="AddNewVendor" method="post" enctype="application/x-www-form-urlencoded">
+    <partial name="_VendorFormsPartial" model="Model" />
+    <button type="submit" class="btn btn-primary">Add</button>
+</form>
+
+@section scripts{
+    <partial name="_ValidationScriptsPartial" />
+}
